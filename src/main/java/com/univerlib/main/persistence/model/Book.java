@@ -33,6 +33,9 @@ public class Book {
         this.publishHouse = publishHouse;
     }
 
+    /* Default Book Constructor */
+    public Book() {};
+
     public Long getId() {
         return id;
     }

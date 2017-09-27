@@ -13,25 +13,33 @@ public class findBooksDaoTestImpl implements FindBooksDao {
 
     public findBooksDaoTestImpl() {
         bookList = new ArrayList<Book>();
-        bookList.add(new Book(1,"cpp-programming", "programming in cpp language."));
-        bookList.add(new Book(2,"java-programming", "programming in javs language."));
-        bookList.add(new Book(3,"python-programming", "programming in python language."));
+        bookList.add(new Book(1, (long) 100, "Cpp-programming", "programming with cpp language",
+                null, ""));
+        bookList.add(new Book(2, (long) 101, "Java-programming", "programming with java language",
+                null, ""));
+        bookList.add(new Book(3, (long) 102, "Python-programming", "programming with python language",
+                null, ""));
+
     }
-    public List<Book> findBooks(long id, String name) {
+    public List<Book> findBooks(Book findBooks) {
         List<Book> dest = new ArrayList<Book>();
-        if( id != 0) {
+        if( findBooks.getId() != 0) {
             for(Book book : bookList ) {
-                if( book.getId() == id) {
+                if( book.getId() == findBooks.getId()) {
                     dest.add(book);
                 }
             }
+            return dest;
         }
-        else {
+
+        if( findBooks.getName() != null) {
             for(Book book : bookList) {
-                if( book.getName() == name )
+                if( book.getName() == findBooks.getName() )
                     dest.add(book);
             }
+            return dest;
         }
+
         return dest;
     }
 }

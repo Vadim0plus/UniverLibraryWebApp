@@ -1,6 +1,7 @@
 package com.univerlib.main.web;
 
 import com.univerlib.main.persistence.model.Book;
+import com.univerlib.main.persistence.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -21,7 +22,10 @@ public class ViewBook {
             ModelMap modelMap
     ) {
 
-        Book book = bookService.viewBook(id);
+
+        Book book = new Book();
+        book.setId(id);
+        book = bookService.viewBook(book);
         if(book != null) {
             modelMap.addAttribute("book", book);
             return "viewBook";

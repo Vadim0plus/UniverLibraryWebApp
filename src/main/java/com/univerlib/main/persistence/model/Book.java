@@ -91,4 +91,28 @@ public class Book {
     public void setPublishHouse(String publishHouse) {
         this.publishHouse = publishHouse;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (!Book.class.isAssignableFrom(obj.getClass())) {
+            return false;
+        }
+
+        final Book other = (Book) obj;
+        if ((this.getId() == null) ? (other.getId() != null) : !this.getId().equals(other.getId())) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = hash + (this.getId() != null ? this.getId().intValue() : 0);
+        hash = hash % 70;
+        return hash;
+    }
 }

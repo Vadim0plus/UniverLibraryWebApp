@@ -2,16 +2,18 @@ package com.univerlib.main.persistence.service.impl;
 
 import com.univerlib.main.persistence.dao.FindBooksDao;
 import com.univerlib.main.persistence.model.Book;
-import com.univerlib.main.persistence.service.FindBooksServiceWithParam;
+import com.univerlib.main.persistence.service.FindBooksService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.*;
 
 @Service
-public class FindBooksServiceWithParamImpl implements FindBooksServiceWithParam{
+public class FindBooksServiceImpl implements FindBooksService {
 
     @Autowired
     protected FindBooksDao findBooksDao;
@@ -103,5 +105,48 @@ public class FindBooksServiceWithParamImpl implements FindBooksServiceWithParam{
 
         List<Book> listBooks = findBooksDao.findBooks(findBooks);
         return listBooks;
+    }
+
+    public List<Book> findBooksWithParams(Map<String, String> mapParams) {
+
+        Set<Map.Entry<String, String>> set = mapParams.entrySet();
+        List<Book> bookList;
+
+        if(mapParams.containsKey("id")) {
+            bookList = findBookWithID(Long.getLong(mapParams.get("id")));
+            return bookList;
+        }
+
+        if(mapParams.containsKey("bookNumber")) {
+            bookList = findBooksWithBookNumber(Long.getLong(mapParams.get("bookNumber")));
+            return bookList;
+        }
+
+        Book findBooks = new Book();
+        try {
+            Class classbook = Class.forName("com.univerlib.main.persistence.model.Book");
+            Field[] classbookfields = classbook.getDeclaredFields();
+            for( Field f : classbookfields) {
+                if(mapParams.containsKey(f.getName())) {
+                    String name = f.getName();
+                    try {
+                        classbook.getDeclaredMethod("set"+ name ).invoke(findBooks,mapParams.get(name));
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    } catch (InvocationTargetException e) {
+                        e.printStackTrace();
+                    } catch (NoSuchMethodException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            bookList =  findBooksDao.findBooks(findBooks);
+            return bookList;
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }

@@ -1,6 +1,7 @@
 package com.univerlib.main.web;
 
 import com.univerlib.main.persistence.model.Book;
+import com.univerlib.main.persistence.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -18,7 +19,9 @@ public class DeleteBook {
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String remove(@RequestParam("id") Long id,
                          ModelMap modelMap) {
-        Book deletedBook = bookService.removeBook(id);
+        Book deletedBook = new Book();
+        deletedBook.setId(id);
+        deletedBook = bookService.deleteBook(deletedBook);
         if(deletedBook != null) {
             modelMap.addAttribute("NameDeletedBook", deletedBook.getName());
             return "deleteBook";

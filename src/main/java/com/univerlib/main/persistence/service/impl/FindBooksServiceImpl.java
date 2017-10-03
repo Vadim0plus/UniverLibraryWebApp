@@ -19,36 +19,16 @@ public class FindBooksServiceImpl implements FindBooksService {
     protected FindBooksDao findBooksDao;
 
 
-    public List<Book> findBookWithID(long id) {
-        Book findBooks = new Book();
-        findBooks.setId(id);
-
-        List<Book> listBooks = findBooksDao.findBooks(findBooks);
-        return listBooks;
+    public Set<Book> findBooksWithBookNumber(long bookNumber) {
+        return findBooksDao.findBooksWithBookNumber(bookNumber);
     }
 
-    public List<Book> findBooksWithBookNumber(Long bookNumber) {
-        Book findBooks = new Book();
-        findBooks.setBookNumber(bookNumber);
-
-        List<Book> listBooks = findBooksDao.findBooks(findBooks);
-        return listBooks;
+    public Queue<Book> findBooksWithName(String name) {
+        return null;
     }
 
-    public List<Book> findBooksWithName(String name) {
-        Book findBooks = new Book();
-        findBooks.setName(name);
-
-        List<Book> listBooks = findBooksDao.findBooks(findBooks);
-        return listBooks;
-    }
-
-    public List<Book> findBooksWithDescription(String desc) {
-        Book findBooks = new Book();
-        findBooks.setDesc(desc);
-
-        List<Book> listBooks = findBooksDao.findBooks(findBooks);
-        return listBooks;
+    public Queue<Book> findBooksWithDescription(String desc) {
+        return null;
     }
 
     public Queue<Book> findBooksWithAuthors(String authors, boolean strictly) {
@@ -97,7 +77,7 @@ public class FindBooksServiceImpl implements FindBooksService {
         }
     }
 
-    public List<Book> findBooksWithPublishYear(int year) {
+    public Set<Book> findBooksWithPublishYear(int year) {
             return findBooksDao.findBooksWithPublishYear(year);
     }
 
@@ -147,54 +127,11 @@ public class FindBooksServiceImpl implements FindBooksService {
         }
     }
 
-    public List<Book> findBooksWithPublishHouse(String publishHouse) {
-        Book findBooks = new Book();
-        findBooks.setPublishHouse(publishHouse);
-
-        List<Book> listBooks = findBooksDao.findBooks(findBooks);
-        return listBooks;
+    public Set<Book> findBooksWithPublishHouse(String publishHouse) {
+        return findBooksDao.findBooksWithPublishHouse(publishHouse);
     }
 
-    public List<Book> findBooksWithParams(Map<String, String> mapParams) {
-
-        Set<Map.Entry<String, String>> set = mapParams.entrySet();
-        List<Book> bookList;
-
-        if(mapParams.containsKey("id")) {
-            bookList = findBookWithID(Long.getLong(mapParams.get("id")));
-            return bookList;
-        }
-
-        if(mapParams.containsKey("bookNumber")) {
-            bookList = findBooksWithBookNumber(Long.getLong(mapParams.get("bookNumber")));
-            return bookList;
-        }
-
-        Book findBooks = new Book();
-        try {
-            Class classbook = Class.forName("com.univerlib.main.persistence.model.Book");
-            Field[] classbookfields = classbook.getDeclaredFields();
-            for( Field f : classbookfields) {
-                if(mapParams.containsKey(f.getName())) {
-                    String name = f.getName();
-                    try {
-                        classbook.getDeclaredMethod("set"+ name ).invoke(findBooks,mapParams.get(name));
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                    } catch (InvocationTargetException e) {
-                        e.printStackTrace();
-                    } catch (NoSuchMethodException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            bookList =  findBooksDao.findBooks(findBooks);
-            return bookList;
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        return null;
+    public Queue<Book> findBooksWithParams(Map<String, String> mapParams) {
+    return null;
     }
 }

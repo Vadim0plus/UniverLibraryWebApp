@@ -5,15 +5,15 @@ import com.univerlib.main.persistence.model.Book;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Set;
 
 public interface FindBooksService {
-    List<Book> findBookWithID(long id);
-    List<Book> findBooksWithBookNumber(Long bookNumber);
-    List<Book> findBooksWithName(String name);
-    List<Book> findBooksWithDescription(String desc);
+    Set<Book> findBooksWithBookNumber(long bookNumber);
+    Queue<Book> findBooksWithName(String name);
+    Queue<Book> findBooksWithDescription(String desc);
     Queue<Book> findBooksWithAuthors(String authors, boolean strictly);
-    List<Book> findBooksWithPublishYear(int year);
+    Set<Book> findBooksWithPublishYear(int year);
     Queue<Book> findBooksWithTags(String tags, boolean strictly );
-    List<Book> findBooksWithPublishHouse(String publishHouse);
-    List<Book> findBooksWithParams(Map<String,String> mapParams);
+    Set<Book> findBooksWithPublishHouse(String publishHouse);
+    Queue<Book> findBooksWithParams(Map<String,String> mapParams);
 }

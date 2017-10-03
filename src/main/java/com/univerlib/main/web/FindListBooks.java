@@ -1,6 +1,6 @@
 package com.univerlib.main.web;
 import com.univerlib.main.persistence.model.Book;
-import com.univerlib.main.persistence.service.FindBooksService;
+import com.univerlib.main.persistence.service.FindBooksServiceReturnBooksObj;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -13,11 +13,11 @@ import java.util.List;
 @RequestMapping("/books")
 public class FindListBooks {
     @Autowired
-    FindBooksService findBooksService;
+    FindBooksServiceReturnBooksObj findBooksServiceReturnBooksObj;
 
     @RequestMapping(value = "/{bookId}", method = RequestMethod.GET)
     public String listBooks(@PathVariable("bookId") long bookId, ModelMap model) {
-        List<Book> bookList = findBooksService.findBookWithID(bookId);
+        List<Book> bookList = findBooksServiceReturnBooksObj.findBookWithID(bookId);
         model.addAttribute("bookList",bookList);
 
         return "books";

@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
-public interface FindBooksService {
+public interface FindBooksServiceReturnBooksObj {
     Set<Book> findBooksWithBookNumber(long bookNumber);
     Queue<Book> findBooksWithName(String name);
     Queue<Book> findBooksWithDescription(String desc);

@@ -2,18 +2,14 @@ package com.univerlib.main.persistence.service.impl;
 
 import com.univerlib.main.persistence.dao.FindBooksDao;
 import com.univerlib.main.persistence.model.Book;
-import com.univerlib.main.persistence.service.FindBooksService;
+import com.univerlib.main.persistence.service.FindBooksServiceReturnBooksObj;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.util.*;
 
 @Service
-public class FindBooksServiceImpl implements FindBooksService {
+public class FindBooksServiceReturnBooksObjImpl implements FindBooksServiceReturnBooksObj {
 
     @Autowired
     protected FindBooksDao findBooksDao;

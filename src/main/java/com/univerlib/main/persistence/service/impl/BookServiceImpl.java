@@ -12,19 +12,22 @@ public class BookServiceImpl implements BookService {
     @Autowired
     BooksDao booksDao;
 
-    public Book addBook(Book addingBook) {
+    public long addBook(Book addingBook) {
         return booksDao.addBook(addingBook);
     }
 
-    public Book updateBook(Book updatingBook) {
+    public boolean updateBook(Book updatingBook) {
         return booksDao.updateBook(updatingBook);
     }
 
-    public Book deleteBook(Book deletingBook) {
+    public boolean deleteBook(Book deletingBook) {
         return booksDao.deleteBook(deletingBook);
     }
+    public boolean deleteBook(long bookID) {
+        return booksDao.deleteBook(bookID);
+    }
 
-    public Book viewBook(Book viewBook) {
-        return booksDao.viewBook(viewBook);
+    public Book viewBook(long bookID) {
+        return booksDao.viewBook(bookID);
     }
 }

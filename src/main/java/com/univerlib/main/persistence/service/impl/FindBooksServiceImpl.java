@@ -51,26 +51,57 @@ public class FindBooksServiceImpl implements FindBooksService {
         return listBooks;
     }
 
-    public List<Book> findBooksWithAuthors(String authors) {
+    public Queue<Book> findBooksWithAuthors(String authors, boolean strictly) {
+
+        /* Get the tags */
         StringTokenizer st = new StringTokenizer(authors, ",;");
-        List<String> authorsList = new ArrayList<String>(st.countTokens());
+        Set<String> authorsSet = new HashSet<String>(st.countTokens());
 
         while(st.hasMoreTokens()) {
-            authorsList.add(st.nextToken());
+            authorsSet.add(st.nextToken());
         }
 
-        Book findBooks = new Book();
-        findBooks.setAuthors(authorsList);
+        /* find the books with required authors */
+        Set<Book> id_booksSet = findBooksDao.findBooksWithAuthors(authorsSet, strictly);
 
-        List<Book> listBooks = findBooksDao.findBooks(findBooks);
-        return listBooks;
+        Queue<Book> queue = new PriorityQueue<Book>();
+        if(!strictly) {
+
+            Map<Integer, List<Book>> map = new HashMap<Integer, List<Book>>();
+
+            Iterator it = id_booksSet.iterator();
+            int max_count = 0;
+            while (it.hasNext()) {
+                Book book = (Book) it.next();
+                max_count = (book.getAuthors().size() > max_count) ? book.getAuthors().size() : max_count;
+                if (map.containsKey(book.getAuthors().size())) {
+                    List<Book> list = map.get(book.getAuthors().size());
+                    list.add(book);
+                } else {
+                    List<Book> list = new ArrayList<Book>();
+                    list.add(book);
+                    map.put(book.getAuthors().size(), list);
+                }
+            }
+
+            for (int i = max_count; i > 0; i--) {
+                if (map.containsKey(i))
+                    queue.addAll(map.get(i));
+            }
+
+            return queue;
+        }
+        else {
+            queue.addAll(id_booksSet);
+            return queue;
+        }
     }
 
     public List<Book> findBooksWithPublishYear(int year) {
             return findBooksDao.findBooksWithPublishYear(year);
     }
 
-    public Queue<Book> findBooksWithTags(String tags, boolean stricty) {
+    public Queue<Book> findBooksWithTags(String tags, boolean strictly) {
 
         /* Get the tags */
         StringTokenizer st = new StringTokenizer(tags, ",;");
@@ -81,10 +112,10 @@ public class FindBooksServiceImpl implements FindBooksService {
         }
 
         /* find the books with required tags */
-        Set<Book> id_booksSet = findBooksDao.findBooksWithTags(tagsSet, stricty);
+        Set<Book> id_booksSet = findBooksDao.findBooksWithTags(tagsSet, strictly);
 
         Queue<Book> queue = new PriorityQueue<Book>();
-        if(!stricty) {
+        if(!strictly) {
 
             Map<Integer, List<Book>> map = new HashMap<Integer, List<Book>>();
 

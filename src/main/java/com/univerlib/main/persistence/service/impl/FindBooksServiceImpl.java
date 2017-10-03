@@ -66,25 +66,13 @@ public class FindBooksServiceImpl implements FindBooksService {
         return listBooks;
     }
 
-    public List<Book> findBooksWithPublishDate(String date) {
-
-        Date publishDate = null;
-        try {
-            publishDate = DateFormat.getDateInstance().parse(date);
-
-            Book findBooks = new Book();
-            findBooks.setPublishDate(publishDate);
-
-            List<Book> listBooks = findBooksDao.findBooks(findBooks);
-            return listBooks;
-
-        } catch (ParseException e) {
-            return null;
-        }
-
+    public List<Book> findBooksWithPublishYear(int year) {
+            return findBooksDao.findBooksWithPublishYear(year);
     }
 
-    public List<Book> findBooksWithTags(String tags) {
+    public Queue<Book> findBooksWithTags(String tags, boolean stricty) {
+
+        /* Get the tags */
         StringTokenizer st = new StringTokenizer(tags, ",;");
         Set<String> tagsSet = new HashSet<String>(st.countTokens());
 
@@ -92,11 +80,40 @@ public class FindBooksServiceImpl implements FindBooksService {
             tagsSet.add(st.nextToken());
         }
 
-        Book findBooks = new Book();
-        findBooks.setTags(tagsSet);
+        /* find the books with required tags */
+        Set<Book> id_booksSet = findBooksDao.findBooksWithTags(tagsSet, stricty);
 
-        List<Book> listBooks = findBooksDao.findBooks(findBooks);
-        return listBooks;
+        Queue<Book> queue = new PriorityQueue<Book>();
+        if(!stricty) {
+
+            Map<Integer, List<Book>> map = new HashMap<Integer, List<Book>>();
+
+            Iterator it = id_booksSet.iterator();
+            int max_count = 0;
+            while (it.hasNext()) {
+                Book book = (Book) it.next();
+                max_count = (book.getTags().size() > max_count) ? book.getTags().size() : max_count;
+                if (map.containsKey(book.getTags().size())) {
+                    List<Book> list = map.get(book.getTags().size());
+                    list.add(book);
+                } else {
+                    List<Book> list = new ArrayList<Book>();
+                    list.add(book);
+                    map.put(book.getTags().size(), list);
+                }
+            }
+
+            for (int i = max_count; i > 0; i--) {
+                if (map.containsKey(i))
+                    queue.addAll(map.get(i));
+            }
+
+            return queue;
+        }
+        else {
+            queue.addAll(id_booksSet);
+            return queue;
+        }
     }
 
     public List<Book> findBooksWithPublishHouse(String publishHouse) {
